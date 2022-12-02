@@ -1,0 +1,27 @@
+:root{
+    --primary-color:#003796;
+}
+
+.loginBox .btn{
+    background:var(--primary-color);
+}
+.row{
+    --bs-gutter-x:0em;
+    height:100vh;
+}
+
+
+/* login screen*/
+
+
+.loginContainer .loginBox h4{
+    color:var(--primary-color);
+    font-weight: bold;
+}
+.loginContainer .loginBox i{
+    color:var(--primary-color);
+    font-size: 1.3rem;
+    margin-top:10px;
+}
+
+
