@@ -34,12 +34,15 @@ const cargarExcel = (e)=>{
 const enviarCorreos = (e)=>{
     e.preventDefault();
     let mesPago = document.getElementById("mesPago").value;
+    let tipoBoleta = document.getElementById("tipoBoleta").value;
     fetch(`${URI}enviarCorreos`,{
         method:'POST',
         headers:{
             'Content-type':'application/json'
         },
-        body:JSON.stringify({"mesPago": mesPago})
+        body:JSON.stringify(
+            {"mesPago": mesPago,
+             "tipoBoleta":tipoBoleta})
     }).then(res=>res.json()).then(data=>{
         if(data.message=="Debe cargar un excel"){
             Swal.fire({

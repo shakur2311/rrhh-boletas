@@ -8,7 +8,7 @@ const app = express();
 //Settings
 app.set('PORT',8000||process.env.PORT);
 app.set('name','Correos Masivos App');
-
+app.set('view engine', 'ejs');
 
 //Middlewares
 app.use(morgan('dev'));

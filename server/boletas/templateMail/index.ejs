@@ -100,13 +100,19 @@
         /* Dandole propiedades a la celda para que aparezcan los datos en los extremos izquierdo y derecho de la celda */
         .celda{
             display: flex;
+            flex-direction: row;
             justify-content: space-between;
+            display: -webkit-box;
+            display: -ms-flexbox;
             -webkit-flex-wrap: wrap;
             flex-wrap: nowrap;
             -webkit-justify-content:space-between;
             -moz-justify-content:space-between;
+        
         }
-    
+        .celda div{
+            display: flex;
+        }
        
 
     </style>
@@ -203,29 +209,20 @@
                     <tbody>
                         <tr>
                             <td class="p-1">
-                                <div class="celda justify-content-between">
-                                    <div>hola</div>
-                                    <div>100</div>
-                                </div>
-                                <div class="celda justify-content-between">
-                                    <div>hola2</div>
-                                    <div>400.7</div>
-                                </div>
-                                                         
+                                <% ingresosArray.forEach(element => { %>
+                                    <div class="celda justify-content-between">
+                                        <div><%= element.texto %></div>
+                                        <div><%= element.valor %></div>
+                                    </div>
+                                <% }) %>                            
                             </td>
                             <td class="p-1">
-                                <div class="celda">
-                                    <div>hola3</div>
-                                    <div>300</div>
-                                </div>
-                                <div class="celda">
-                                    <div>hola3</div>
-                                    <div>300</div>
-                                </div>
-                                <div class="celda">
-                                    <div>hola3</div>
-                                    <div>300</div>
-                                </div>                           
+                                <% egresosArray.forEach(element => { %>
+                                    <div class="celda justify-content-between">
+                                        <div><%= element.texto %></div>
+                                        <div><%= element.valor %></div>
+                                    </div>
+                                <% }) %>                            
                             </td>
                             <td class="p-1">
                                 <div><%= aportes %></div>                        

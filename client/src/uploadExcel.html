@@ -30,7 +30,8 @@
                 <h3>Paso 2: Generar Boletas y enviar correos</h3>
                 <div class="formulario w-75 mt-5">
                     <form onsubmit="enviarCorreos(event)">
-                        <select name="mesPago" id="mesPago" class="form-select">
+                        <label for="mesPago">Seleccione el mes</label>
+                        <select name="mesPago" id="mesPago" class="form-select mb-3">
                             <option value="Enero" selected>Enero</option>
                             <option value="Febrero">Febrero</option>
                             <option value="Marzo">Marzo</option>
@@ -43,7 +44,13 @@
                             <option value="Octubre">Octubre</option>
                             <option value="Noviembre">Noviembre</option>
                             <option value="Diciembre">Diciembre</option>
-                        </select>                  
+                        </select>
+                        <label for="tipoBoleta">Seleccione tipo de boleta a generar</label>     
+                        <select name="tipoBoleta" id="tipoBoleta" class="form-select">
+                            <option value="planillaCas" selected>Planilla - CAS</option>
+                            <option value="planillaHaberes">Planilla - Haberes</option>
+                            <option value="planillaPensiones">Planilla - Pensiones</option>
+                        </select>                 
                         <button type="submit" class="form-control btn btn-dark mt-3">Enviar Correos</button>
                     </form>
                 </div>
