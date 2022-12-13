@@ -67,7 +67,14 @@ const enviarCorreos = async (req,res)=>{
                 },
             });
             //
-
+            //Convertir createPDF de html-pdf a promesa
+            const createPDF = (html, options) => new Promise(((resolve, reject) => {
+                pdf.create(html, options).toBuffer((err, buffer) => {
+                    if (err !== null) {reject(err);}
+                    else {resolve(buffer);}
+                });
+            }));
+            
             for(let i = 0;i<(excelFileSheets.Hoja1).length;i++){
                 //Elaborando la boleta pdf
                 
@@ -323,13 +330,7 @@ const enviarCorreos = async (req,res)=>{
                     //TOTALLIQUIDO
                     totalLiquido                  
                 })  
-                //Convertir createPDF de html-pdf a promesa
-                const createPDF = (html, options) => new Promise(((resolve, reject) => {
-                    pdf.create(html, options).toBuffer((err, buffer) => {
-                        if (err !== null) {reject(err);}
-                        else {resolve(buffer);}
-                    });
-                }));
+                
                 let pdfCreado = await createPDF(fileRendered,{timeout: '540000'});
                 await fs.writeFileSync(`./boletas/emitidas/${filename}`,pdfCreado);
                 //Enviando email
