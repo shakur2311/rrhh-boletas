@@ -29,7 +29,7 @@ const cargarExcel = (req,res)=>{
     
 }
 
-const enviarCorreos = (req,res)=>{
+const enviarCorreos = async (req,res)=>{
     try {
         
         if(excelCargado){
@@ -44,16 +44,22 @@ const enviarCorreos = (req,res)=>{
             switch(req.body.tipoBoleta){
                 case "planillaCas":
                     tipoBoleta = "PLANILLA - CAS";
+                    break;
                 case "planillaHaberes":
                     tipoBoleta = "PLANILLA - HABERES";
+                    break;
                 case "planillaPensiones":
-                    tipoBoleta = "PLANILLA - PENSIONES"
+                    tipoBoleta = "PLANILLA - PENSIONES";
+                    break;
+                default:
+                    tipoBoleta = "Indefinido";
             }
 
             //Config de nodemailer
             let transporter = nodemailer.createTransport({
                 host: "smtp.gmail.com",
                 port: 465,
+                pool:true,
                 secure: true, // true for 465, false for other ports
                 auth: {
                 user: 'shakuriwo23@gmail.com', // user gmail acc
@@ -62,10 +68,11 @@ const enviarCorreos = (req,res)=>{
             });
             //
 
-            for(var i = 0;i<(excelFileSheets.Hoja1).length;i++){
+            for(let i = 0;i<(excelFileSheets.Hoja1).length;i++){
                 //Elaborando la boleta pdf
                 
                 //Datos extraidos del excel
+                //#region 
                 //Info de empleado
                 let codigo = excelFileSheets.Hoja1[i]["CODIGO"];
                 let apenom = excelFileSheets.Hoja1[i]["APELLIDOS Y NOMBRES"];
@@ -273,9 +280,10 @@ const enviarCorreos = (req,res)=>{
 
                 //TOTAL LIQUIDO
                 let totalLiquido = excelFileSheets.Hoja1[i]["TOTAL LIQUIDO"];
+                
+                //#endregion
 
-
-
+                
                 //Obteniendo hora y fecha actual para guardar nombre boleta PDF
                 const date = new Date().toLocaleString({ timeZone: "America/Lima" });
                 const newDate = date.split(' ');
@@ -284,7 +292,7 @@ const enviarCorreos = (req,res)=>{
                 const filename = codigo+'-'+fecha+'-'+hora+'.pdf';
 
 
-                ejs.renderFile(path.join(__dirname,'..','boletas/templateMail/index.ejs'),{
+                let fileRendered = await ejs.renderFile(path.join(__dirname,'..','boletas/templateMail/index.ejs'),{
                     tipoBoleta,
                     mesPago,
                     codigo,
@@ -314,44 +322,31 @@ const enviarCorreos = (req,res)=>{
                     aportes,
                     //TOTALLIQUIDO
                     totalLiquido                  
-                }
-                ,function(err,result){
-                    if(result){
-                        contenidoHtml = result;
-                        //Creando boleta pdf con valores reemplazados y guardandolo
-                        pdf.create(contenidoHtml).toFile(`./boletas/emitidas/${filename}`, function(err,res) {
-                            if (err) {
-                                console.log("error al guardar boleta")
-                            
-                            }else{
-
-                                console.log("pdf guardado en servidor!");
-                                //Enviando email
-                                transporter.sendMail({
-                                    from: '<shakuriwo23@gmail.com>', // sender address
-                                    to: correo, // list of receivers
-                                    subject: "Prueba", // Subject line
-                                    html: `<p>Saludos cordiales <strong>${apenom}</strong> se hace envio de la boleta 
-                                    correspondiente al mes de <strong>${mesPago}</strong></p>`,
-                                    attachments:[{
-                                        filename:filename,
-                                        path:path.join(__dirname,'..','boletas/emitidas',filename)
-                                    }]
-                                });
-                            }
-                        });
-                    }else{
-                        console.log(err);
-                    }
                 })  
-                
-                
+                //Convertir createPDF de html-pdf a promesa
+                const createPDF = (html, options) => new Promise(((resolve, reject) => {
+                    pdf.create(html, options).toBuffer((err, buffer) => {
+                        if (err !== null) {reject(err);}
+                        else {resolve(buffer);}
+                    });
+                }));
+                let pdfCreado = await createPDF(fileRendered,{timeout: '540000'});
+                await fs.writeFileSync(`./boletas/emitidas/${filename}`,pdfCreado);
+                //Enviando email
+                await transporter.sendMail({
+                    from: '<shakuriwo23@gmail.com>', // sender address
+                    to: correo, // list of receivers
+                    subject: "Prueba", // Subject line
+                    html: `<p>Saludos cordiales <strong>${apenom}</strong> se hace envio de la boleta 
+                    correspondiente al mes de <strong>${mesPago}</strong></p>`,
+                    attachments:[{
+                        filename:filename,
+                        path:path.join(__dirname,'..','boletas/emitidas',filename)
+                    }]
+                });
+                console.log("PDF GUARDADO Y ENVIADO POR CORREO");
 
-
-
-                
-
-                
+     
             }
 
             //Devuelve correos enviados luego de recorrer todo el for

@@ -15,6 +15,7 @@ const createLoginWindow = () =>{
     minHeight:600,
     resizable:false,
     title:'RR.HH APP',
+    icon:__dirname+'./icon.ico',
     autoHideMenuBar:true,
     webPreferences: {
         nodeIntegration: true,
@@ -34,6 +35,7 @@ const createHomeWindow = ()=>{
     minHeight:600,
     resizable:false,
     title:'RR.HH APP',
+    icon:__dirname+'./icon.ico',
     autoHideMenuBar:true,
     webPreferences: {
         nodeIntegration: true,
@@ -52,6 +54,7 @@ const createUploadExcelWindow = () => {
       minWidth: 1280,
       minHeight: 720,
       title: 'RR.HH APP',
+      icon:__dirname+'./icon.ico',
       webPreferences:{
         nodeIntegration:true,
         contextIsolation: false,
@@ -72,6 +75,7 @@ const createUploadedFilesWindow = () =>{
     height:720,
     resizable:false,
     title:'RR.HH APP',
+    icon:__dirname+'./icon.ico',
     autoHideMenuBar:true
   })
 
@@ -84,6 +88,7 @@ const createHelpWindow = ()=>{
     height:600,
     resizable:false,
     title: 'Ayuda',
+    icon:__dirname+'./icon.ico',
     autoHideMenuBar:true
   })
 }

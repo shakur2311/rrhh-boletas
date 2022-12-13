@@ -35,6 +35,8 @@ const enviarCorreos = (e)=>{
     e.preventDefault();
     let mesPago = document.getElementById("mesPago").value;
     let tipoBoleta = document.getElementById("tipoBoleta").value;
+    let enviandoCorreosModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('enviandoCorreosModal'));
+    enviandoCorreosModal.show();
     fetch(`${URI}enviarCorreos`,{
         method:'POST',
         headers:{
@@ -63,5 +65,7 @@ const enviarCorreos = (e)=>{
                 text: 'Error desconocido!',
             })
         }
+        enviandoCorreosModal.hide();
     })
 }
+

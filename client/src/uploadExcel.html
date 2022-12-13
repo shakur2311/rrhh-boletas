@@ -51,7 +51,22 @@
                             <option value="planillaHaberes">Planilla - Haberes</option>
                             <option value="planillaPensiones">Planilla - Pensiones</option>
                         </select>                 
-                        <button type="submit" class="form-control btn btn-dark mt-3">Enviar Correos</button>
+                        <button type="submit" class="form-control btn btn-dark my-3">Enviar Correos</button>
+                        <!-- Estado enviando correos Modal -->
+                        <div class="modal" data-bs-backdrop="static" tabindex="-1" id="enviandoCorreosModal">
+                            <div class="modal-dialog modal-dialog-centered">
+                              <div class="modal-content">
+                                <div class="modal-body text-center">
+                                    <span>Enviando correos...</span>
+                                    <div class="spinner-border text-primary" role="status">
+                                        
+                                    </div>
+                                    
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                        
                     </form>
                 </div>
             </div>

@@ -99,16 +99,10 @@
         }
         /* Dandole propiedades a la celda para que aparezcan los datos en los extremos izquierdo y derecho de la celda */
         .celda{
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
             display: -webkit-box;
-            display: -ms-flexbox;
-            -webkit-flex-wrap: wrap;
+            -webkit-flex-wrap: nowrap;
             flex-wrap: nowrap;
-            -webkit-justify-content:space-between;
-            -moz-justify-content:space-between;
-        
+            -webkit-box-pack: justify;  
         }
         .celda div{
             display: flex;
@@ -144,7 +138,7 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="codigo p-1">
-                            <p>Codigo:<span class="ps-1"><%= codigo %></span></p>
+                            <p>Código:<span class="ps-1"><%= codigo %></span></p>
                         </div>
                         <div class="apenom p-1">
                             <p>Apell. y Nom.: <span class="ps-1"><%= apenom %></span></p>
@@ -210,7 +204,7 @@
                         <tr>
                             <td class="p-1">
                                 <% ingresosArray.forEach(element => { %>
-                                    <div class="celda justify-content-between">
+                                    <div class="celda">
                                         <div><%= element.texto %></div>
                                         <div><%= element.valor %></div>
                                     </div>
@@ -218,14 +212,17 @@
                             </td>
                             <td class="p-1">
                                 <% egresosArray.forEach(element => { %>
-                                    <div class="celda justify-content-between">
+                                    <div class="celda">
                                         <div><%= element.texto %></div>
                                         <div><%= element.valor %></div>
                                     </div>
                                 <% }) %>                            
                             </td>
                             <td class="p-1">
-                                <div><%= aportes %></div>                        
+                                <div class="celda">
+                                    <div>ESSALUD</div>
+                                    <div><%= aportes %></div>
+                                </div>                        
                             </td>
                         </tr>
                                 
@@ -241,7 +238,7 @@
                 
             </div>
             <div class="total-liquido border border-dark rounded p-3 mt-3">
-                Total Liquido: <span id="total-liquido"><%= totalLiquido  %></span> 
+                Total Líquido: <span id="total-liquido"><%= totalLiquido  %></span> 
             </div>
             <div class="imageFirma">
                 <img src="https://raw.githubusercontent.com/shakur2311/rrhhApp-images/main/image/firma.PNG" alt="" width="250px" height="120px" style="margin-left:400px;">
