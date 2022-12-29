@@ -52,7 +52,7 @@ const enviarCorreos = (e)=>{
                 title:'Advertencia!',
                 text: 'Debe cargar un excel primero!',
             })
-        }else if(data.message="correos enviados!"){
+        }else if(data.message=="correos enviados!"){
             Swal.fire({
                 icon: 'success',
                 title:'Éxito',

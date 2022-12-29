@@ -24,7 +24,8 @@ const cargarExcel = (req,res)=>{
         res.json({"message":"Excel cargado"});
         excelCargado=true;
     } catch (error) {
-        res.json({'error':error.message})
+        res.json({'error':error.message});
+        excelCargado=false;
     }
     
 }
@@ -37,7 +38,6 @@ const enviarCorreos = async (req,res)=>{
             //Capturo valor del mes de la boleta a emitir y tipo de boleta
             let mesPago = req.body.mesPago;
             let tipoBoleta;
-            let contenidoHtml;
             
 
 
@@ -88,8 +88,17 @@ const enviarCorreos = async (req,res)=>{
                 let carnetEssalud = excelFileSheets.Hoja1[i]["CARNET ESSALUD"];
                 let afp = excelFileSheets.Hoja1[i]['AFP'];
                 let tpers = excelFileSheets.Hoja1[i]["T.PERS/PLAZA MGRH"];
-                let diasLaborados = excelFileSheets.Hoja1[i]['DIAS LABORADOS'];
-                let fechaIngreso = excelFileSheets.Hoja1[i]["FECHA DE INGRESO"];
+                let diasLaborados = excelFileSheets.Hoja1[i]['DIAS LABORADOS'];    
+                let fechaIngreso;
+                if(excelFileSheets.Hoja1[i]["FECHA DE INGRESO"].toString().length==6){
+                    fechaIngreso = excelFileSheets.Hoja1[i]["FECHA DE INGRESO"].toString().substr(0,2) 
+                    + " Años " + excelFileSheets.Hoja1[i]["FECHA DE INGRESO"].toString().substr(2,2) + " Meses "
+                    + excelFileSheets.Hoja1[i]["FECHA DE INGRESO"].toString().substr(4,2) + " Dias ";
+                }else if(excelFileSheets.Hoja1[i]["FECHA DE INGRESO"].toString().length==5){
+                    fechaIngreso = excelFileSheets.Hoja1[i]["FECHA DE INGRESO"].toString().substr(0,1) 
+                    + " Años " + excelFileSheets.Hoja1[i]["FECHA DE INGRESO"].toString().substr(1,2) + " Meses "
+                    + excelFileSheets.Hoja1[i]["FECHA DE INGRESO"].toString().substr(3,2) + " Dias ";
+                }
                 let nivelRem = excelFileSheets.Hoja1[i]["NIVEL REM"];
                 let nroCuenta = excelFileSheets.Hoja1[i]["NRO CUENTA"];
                 let cargoEstructural = excelFileSheets.Hoja1[i]["CARGO ESTRUCTURAL"];
@@ -100,17 +109,51 @@ const enviarCorreos = async (req,res)=>{
                 let correo = excelFileSheets.Hoja1[i]["CORREO"];
                 
                 //INGRESOS
+                let pensiones = excelFileSheets.Hoja1[i]["PENSIONES"];
+                let DS062020ef = excelFileSheets.Hoja1[i]["S *, 110-06, 39-07,6-2020-EF"];
+                let DS170519ef = excelFileSheets.Hoja1[i]["D.S. N* 17-2005-EF-09-2019-EF"];
+                let Asig27691 = excelFileSheets.Hoja1[i]["ASIGNACION 276-91-EF"];
+                let DS1118ef = excelFileSheets.Hoja1[i]["LEY 28449--28789--D.S.11-18 EF"];
+                let DS0621ef = excelFileSheets.Hoja1[i]["D.S.006-2021-EF"];
+                let DS01422ef = excelFileSheets.Hoja1[i]["D.S.014-2022-EF"];
+                let grati = excelFileSheets.Hoja1[i]["GRATIFICACIÓN"];
                 let docentescontratados = excelFileSheets.Hoja1[i]["D.S 418"];
                 let autoridades = excelFileSheets.Hoja1[i]["D.S 313"];
                 let docentesnombrados = excelFileSheets.Hoja1[i]["MUC 58"];
                 let administrativos1 = excelFileSheets.Hoja1[i]["MUC DU 38"];
                 let administrativos2 = excelFileSheets.Hoja1[i]["BDP"];
                 let administrativos3 = excelFileSheets.Hoja1[i]["BET"];
+                let aguinaldo = excelFileSheets.Hoja1[i]["AGUINALDO"];
                 let cas = excelFileSheets.Hoja1[i]["CAS"];
                 let reintegro = excelFileSheets.Hoja1[i]["REINTEGRO"];
-                let totalingresos = excelFileSheets.Hoja1[i]["TOTAL DE ING."];
+                let totalingresos = parseFloat(excelFileSheets.Hoja1[i]["TOTAL DE ING."]).toFixed(2);
 
                 let ingresosArray = [];
+
+                if(typeof pensiones!='undefined'){
+                    ingresosArray.push({"texto":"Pensiones","valor":pensiones});
+                }
+                if(typeof DS062020ef!='undefined'){
+                    ingresosArray.push({"texto":"D.S. 06-2020-EF","valor":DS062020ef});
+                }
+                if(typeof DS170519ef!='undefined'){
+                    ingresosArray.push({"texto":"D.S. 17-05.19-EF","valor":DS170519ef});
+                }
+                if(typeof Asig27691!='undefined'){
+                    ingresosArray.push({"texto":"ASIG-276-91-EF","valor":Asig27691});
+                }
+                if(typeof DS1118ef!='undefined'){
+                    ingresosArray.push({"texto":"D.S. 11-18-EF","valor":DS1118ef});
+                }
+                if(typeof DS0621ef!='undefined'){
+                    ingresosArray.push({"texto":"D.S. 006-21-EF","valor":DS0621ef});
+                }
+                if(typeof DS01422ef!='undefined'){
+                    ingresosArray.push({"texto":"D.S. 014-2022-EF","valor":DS01422ef});
+                }
+                if(typeof grati!='undefined'){
+                    ingresosArray.push({"texto":"GRATIFIC.","valor":grati});
+                }
                 if(typeof docentescontratados!='undefined'){
                     ingresosArray.push({"texto":"D.S 418","valor":docentescontratados});
                 }
@@ -129,6 +172,9 @@ const enviarCorreos = async (req,res)=>{
                 if(typeof administrativos3!='undefined'){
                     ingresosArray.push({"texto":"BET","valor":administrativos3});
                 }
+                if(typeof aguinaldo!='undefined'){
+                    ingresosArray.push({"texto":"Aguinaldo","valor":aguinaldo});
+                }
                 if(typeof cas!= 'undefined'){
                     ingresosArray.push({"texto":"CAS","valor":cas});
                 }
@@ -146,8 +192,10 @@ const enviarCorreos = async (req,res)=>{
                 let coopsanmiguel = excelFileSheets.Hoja1[i]["SAN MIGUEL EX COOP-PONDEROSA"];
                 let otrossudunac = excelFileSheets.Hoja1[i]["OTROS(SUTUNAC)"];
                 let bancognb = excelFileSheets.Hoja1[i]["BANCO GNB PERU S.A."];
-                let coopeltumi = excelFileSheets.Hoja1[i]["COOPERATIVO EL TUMI "];
+                let coopeltumi = excelFileSheets.Hoja1[i]["COOPERATIVO EL TUMI"];
+                let asocjubunac = excelFileSheets.Hoja1[i]["ASOC. JUB.UNAC"];
                 let bancoscotiabank = excelFileSheets.Hoja1[i]["SCOTIABANK PERU S.A.A."];
+                let ceuunac = excelFileSheets.Hoja1[i]["CEU-UNAC"];
                 let sutunacfall = excelFileSheets.Hoja1[i]["SUTUNAC (FALL. CESE)"];
                 let sudunacfall = excelFileSheets.Hoja1[i]["FALLECIMIENTO (SUDUNAC)JCASTIL"];
                 let cajachica = excelFileSheets.Hoja1[i]["CAJA CHICA O.TES."];
@@ -156,6 +204,7 @@ const enviarCorreos = async (req,res)=>{
                 let omc = excelFileSheets.Hoja1[i]["OMC"];
                 let sutunac = excelFileSheets.Hoja1[i]["SUTUNAC"];
                 let segmasvida = excelFileSheets.Hoja1[i]["+VIDA SEGURO DE ACCIDENTES"];
+                let segmasvidapension = excelFileSheets.Hoja1[i]["+VIDA SEG.ACC.PENSION"];
                 let segrimac = excelFileSheets.Hoja1[i]["RIMAC INTERNAC.CIA SEG."];
                 let sudunacjc = excelFileSheets.Hoja1[i]["SUDUNAC( JORGE CASTILLO P)"];
                 let seginterseguro = excelFileSheets.Hoja1[i]["INTERSEGURO"];
@@ -173,7 +222,9 @@ const enviarCorreos = async (req,res)=>{
                 let dl2530 = excelFileSheets.Hoja1[i]["D.L. 20530"];
                 let cuartacat = excelFileSheets.Hoja1[i]["4TA CATEGORIA"];
                 let quintacat = excelFileSheets.Hoja1[i]["5TA CATEGORIA"];
-                let totaldscts = excelFileSheets.Hoja1[i]["TOTAL DESCUENTOS"];
+                let essaludPensionistas = excelFileSheets.Hoja1[i]["ESSALUD PENS."];
+                let totaldscts = parseFloat(excelFileSheets.Hoja1[i]["TOTAL DESCUENTOS"]).toFixed(2);
+                
                 
                 let egresosArray = [];
                 if(typeof faltasyotardanzas!='undefined'){
@@ -203,8 +254,14 @@ const enviarCorreos = async (req,res)=>{
                 if(typeof coopeltumi!='undefined'){
                     egresosArray.push({"texto":"Coop. 'El Tumi'","valor":coopeltumi});
                 }
+                if(typeof asocjubunac!='undefined'){
+                    egresosArray.push({"texto":"ASOC. JUB.UNAC","valor":asocjubunac});
+                }
                 if(typeof bancoscotiabank!='undefined'){
                     egresosArray.push({"texto":"Scotiabank Perú","valor":bancoscotiabank});
+                }
+                if(typeof ceuunac!='undefined'){
+                    egresosArray.push({"texto":"CEU-UNAC","valor":ceuunac});
                 }
                 if(typeof sutunacfall!='undefined'){
                     egresosArray.push({"texto":"Sutunac","valor":sutunacfall});
@@ -229,6 +286,9 @@ const enviarCorreos = async (req,res)=>{
                 }
                 if(typeof segmasvida!='undefined'){
                     egresosArray.push({"texto":"+Vida Seguro","valor":segmasvida});
+                }
+                if(typeof segmasvidapension!='undefined'){
+                    egresosArray.push({"texto":"+Vida.Seg.Acc.Pens","valor":segmasvidapension});
                 }
                 if(typeof segrimac!='undefined'){
                     egresosArray.push({"texto":"Seg. Rimac Inter.","valor":segrimac});
@@ -281,12 +341,26 @@ const enviarCorreos = async (req,res)=>{
                 if(typeof quintacat!='undefined'){
                     egresosArray.push({"texto":"5ta Categoria","valor":quintacat});
                 }
+                if(typeof essaludPensionistas!='undefined'){
+                    egresosArray.push({"texto":"Essalud Pens.","valor":essaludPensionistas});
+                }
+                
 
                 //ESSALUD
                 let aportes = excelFileSheets.Hoja1[i]["APORTES"];
 
+                let aportesInfo;
+                let totalAportes;
+                if(tipoBoleta=="PLANILLA - PENSIONES"){
+                    aportesInfo={"texto":"","valor":""};
+                    totalAportes = 0;
+                }else{
+                    aportesInfo = {"texto":"ESSALUD","valor":aportes};
+                    totalAportes = aportes;
+                }
+
                 //TOTAL LIQUIDO
-                let totalLiquido = excelFileSheets.Hoja1[i]["TOTAL LIQUIDO"];
+                let totalLiquido = parseFloat(excelFileSheets.Hoja1[i]["TOTAL LÍQUIDO"]).toFixed(2);
                 
                 //#endregion
 
@@ -326,7 +400,8 @@ const enviarCorreos = async (req,res)=>{
                     egresosArray,
                     totaldscts,
                     //ESSALUD
-                    aportes,
+                    aportesInfo,
+                    totalAportes,
                     //TOTALLIQUIDO
                     totalLiquido                  
                 })  
@@ -361,6 +436,7 @@ const enviarCorreos = async (req,res)=>{
 
     } catch (error) {
         res.json({'error':error.message})
+        console.log(error);
     }
 }
 

@@ -134,7 +134,7 @@
                     <h5 id="mesPago" style="margin-left:10px;">20138705944</h5>
                 </div>
             </div>
-            <div class="infoPersonaContainer border border-dark rounded p-3 mt-3">
+            <div class="infoPersonaContainer p-3 mt-3">
                 <div class="row">
                     <div class="col-6">
                         <div class="codigo p-1">
@@ -220,8 +220,8 @@
                             </td>
                             <td class="p-1">
                                 <div class="celda">
-                                    <div>ESSALUD</div>
-                                    <div><%= aportes %></div>
+                                    <div><%= aportesInfo.texto %>  </div>
+                                    <div><%= aportesInfo.valor %></div>
                                 </div>                        
                             </td>
                         </tr>
@@ -229,9 +229,24 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="p-1">Total Ingresos: <span id="totalIngresos"><%= totalingresos %></span></td>
-                            <td class="p-1">Total Egresos: <span id="totalEgresos"><%= totaldscts  %></span></td>
-                            <td class="p-1">Total Aportes: <span id="totalAportes"><%= aportes  %></span></td>
+                            <td class="p-1"> 
+                                <div class="celda">
+                                    <div>Total Ingresos: </div>
+                                    <div id="totalIngresos"><%= totalingresos %></div>
+                                </div> 
+                            </td>
+                            <td class="p-1">
+                                <div class="celda">
+                                    <div>Total Egresos: </div>
+                                    <div id="totalEgresos"><%= totaldscts  %></div>
+                                </div>
+                            </td>
+                            <td class="p-1">
+                                <div class="celda">
+                                    <div>Total Aportes: </div>
+                                    <div id="totalAportes"><%= totalAportes  %></div>
+                                </div>
+                            </td>
                         </tr>
                     </tfoot>
                 </table>
